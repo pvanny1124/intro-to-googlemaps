@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<head>
+    <html>
+    <title>
+        My Google Map
+    </title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+        <body>
+            <h1>My Google Map</h1>
+            <div id="map"></div>
+            <script>
+                function initMap(){
+                    //create Map options to be passed into our map
+                    var options = {
+                        zoom: 10,
+                        center: {lat: 40.7128, lng: -74.0060}
+                    }
+                    //create a new map with the options we created
+                    var map = new google.maps.Map(document.getElementById("map"), options);
+                    
+                    //add listen for click on map to add a marker where that click happened
+                    google.maps.event.addListener(map, "click", function(event){
+                        addMarker({coords: event.latLng});
+                        //event.latLng gets the coordinates of wherever you click in the map
+                    });
+                    
+                    /* ADDING MULTIPLE MARKERS */
+                    
+                    //create array of markers
+                    
+                    var markers = [
+                        {
+                            coords: {lat: 40.7282, lng:-73.7949},
+                            iconImage: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                            content: "<h1>Queens</h1>"
+                            
+                        },
+                        {
+                            coords: {lat: 40.837048, lng:-73.865433},
+                            content: "<h1>Bronx</h1>"
+                        },
+                        {
+                            coords: {lat: 40.6782, lng:-73.9442},
+                            content: "<h1>Brooklyn</h1>"
+                        }
+                        
+                        ];
+                        
+                        //Loop through markers array and create markers with each object in the array
+                        
+                        for(var i = 0; i < markers.length; i++){
+                            addMarker(markers[i]);
+                        }
+                        
+                        //could add the markers like the following few lines, but this is tedious
+                        
+                  /*  addMarker({
+                        coords: {lat: 40.7282, lng:-73.7949},
+                        iconImage: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                        content: "<h1>Queens</h1>"
+                    });
+                    addMarker({
+                        coords: {lat: 40.837048, lng:-73.865433},
+                        content: "<h1>Bronx</h1>"
+                    });
+                    addMarker({
+                        coords: {lat: 40.6782, lng:-73.9442},
+                        content: "<h1>Brooklyn</h1>"
+                    });*/
+                    
+                    function addMarker(props){
+                         var marker = new google.maps.Marker({
+                           position: props.coords,
+                           map: map //map that we want to add this marker to.
+                           
+                           //we could do the next line
+                                  // icon: props.iconImage;
+                           //but each marker can have a different icon, so we don't include it here
+                        });
+                        
+                        //check if there is a props image and set marker icon property to this image
+                        if(props.iconImage) {
+                            marker.setIcon(props.iconImage);
+                        }
+                        
+                        //check content
+                        if(props.content){
+                            var infoWindow = new google.maps.InfoWindow({
+                                content: props.content
+                            });
+                            
+                            //user click opens up text window respective to this marker
+                            marker.addListener("click", function(){
+                                infoWindow.open(map, marker);
+                            });
+                        }
+                    }
+                    
+                    /*
+                    //ADDING A SINGLE MARKER
+                    
+                    var marker = new google.maps.Marker({
+                       position: {lat: 40.7282, lng:-73.7949},
+                       map: map, //map that we want to add this marker to
+                       icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
+                       //each marker can have a different icon
+                    });
+                    
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: "<h1>Queens</h1>"
+                    });
+                    
+                    marker.addListener("click", function(){
+                        infoWindow.open(map, marker);
+                    })
+                    
+                    */
+                }
+            </script>
+            
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_5LYuEMTzzJdyOKuYYRcLWSjpWq88jzM&callback=initMap"
+            async defer></script>
+            <!-- this script looks for a function called iniMap -->
+        </body>
+
+</html>
+
